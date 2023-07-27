@@ -201,9 +201,10 @@ const runAll = async () => {
 
   // S3バケットのオブジェクト削除
   console.log(">>> Delete object");
-  filelist.forEach(
-    async (file: string) => await runDeleteObject(bucketName, file)
-  );
+  for (const filepath of filelist) {
+    if (!filepath) continue;
+    await runDeleteObject(bucketName, filepath);
+  }
 
   // S3バケットの削除
   console.log(">>> Delete bucket");
