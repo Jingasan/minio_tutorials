@@ -2,25 +2,15 @@ version: "3.9"
 services:
   minio-server:
     container_name: minio-server
-    image: minio-server:latest
-    build:
-      context: ./
-      dockerfile: Dockerfile
-      args:
-        - HTTP_PROXY=$HTTP_PROXY
-        - http_proxy=$http_proxy
-        - HTTPS_PROXY=$HTTPS_PROXY
-        - https_proxy=$https_proxy
+    image: minio/minio:RELEASE.2021-04-06T23-11-00Z
     ports:
       - "9000:9000"
     volumes:
-      - ./minio/data:/data
-      - ./minio/export:/export
-      - ./minio/config:/root/.minio
-      - ./minio/policies:/policies
+      - ./data:/data
+    command: minio server /data
     environment:
-      MINIO_ROOT_USER: root # ROOTユーザー名
-      MINIO_ROOT_PASSWORD: password # ROOTパスワード
+      MINIO_ROOT_USER: minioadmin # ROOTユーザー名
+      MINIO_ROOT_PASSWORD: minioadmin # ROOTパスワード
     deploy:
       mode: replicated
       replicas: 1 # 起動コンテナ数

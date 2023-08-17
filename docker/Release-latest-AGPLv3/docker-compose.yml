@@ -10,8 +10,8 @@ services:
       - ./data:/data
     command: minio server --console-address ":9090" /data
     environment:
-      MINIO_ROOT_USER: root # ROOTユーザー名
-      MINIO_ROOT_PASSWORD: password # ROOTパスワード
+      MINIO_ROOT_USER: minioadmin # ROOTユーザー名
+      MINIO_ROOT_PASSWORD: minioadmin # ROOTパスワード
     deploy:
       mode: replicated
       replicas: 1 # 起動コンテナ数
