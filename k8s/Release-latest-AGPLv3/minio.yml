@@ -5,14 +5,14 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - name: "http-s3api-port"
+    - name: "http-port"
       protocol: "TCP"
       port: 9000 # ClusterIPで受け付けるPort番号
       targetPort: 9000 # 転送先のコンテナのPort番号
     - name: "http-console-page-port"
       protocol: "TCP"
-      port: 9001 # ClusterIPで受け付けるPort番号
-      targetPort: 9001 # 転送先のコンテナのPort番号
+      port: 9090 # ClusterIPで受け付けるPort番号
+      targetPort: 9090 # 転送先のコンテナのPort番号
   selector:
     app: minio
 ---
@@ -40,7 +40,7 @@ spec:
             - /bin/bash
             - -c
           args:
-            - minio server /data --console-address :9001
+            - minio server /data --console-address :9090
           env:
             - name: MINIO_ROOT_USER # ROOTユーザー名
               value: root
