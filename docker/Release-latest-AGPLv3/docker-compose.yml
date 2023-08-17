@@ -1,24 +1,14 @@
 version: "3.9"
 services:
-  minio-server-latest:
-    container_name: minio-server-latest
-    image: minio-server-latest:latest
-    build:
-      context: ./
-      dockerfile: Dockerfile
-      args:
-        - HTTP_PROXY=$HTTP_PROXY
-        - http_proxy=$http_proxy
-        - HTTPS_PROXY=$HTTPS_PROXY
-        - https_proxy=$https_proxy
+  minio-server:
+    container_name: minio-server
+    image: minio/minio:latest
     ports:
       - "9000:9000" # APIポート番号
-      - "9001:9001" # 管理コンソール画面ポート番号
+      - "9090:9090" # 管理コンソール画面ポート番号
     volumes:
-      - ./minio/data:/data
-      - ./minio/export:/export
-      - ./minio/config:/root/.minio
-      - ./minio/policies:/policies
+      - ./data:/data
+    command: minio server --console-address ":9090" /data
     environment:
       MINIO_ROOT_USER: root # ROOTユーザー名
       MINIO_ROOT_PASSWORD: password # ROOTパスワード
