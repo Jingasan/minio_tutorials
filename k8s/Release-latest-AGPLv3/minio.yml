@@ -24,15 +24,15 @@ metadata:
   name: minio
 spec:
   replicas: 1
-  selector: # [Must] StatefulSetによって対象となるPodのラベルを指定する。
+  selector: # StatefulSetによって対象となるPodのラベルを指定する。
     matchLabels:
-      app: minio # [Must] Podのlabelsに指定したラベルを記述する。
+      app: minio # Podのlabelsに指定したラベルを記述する。
   serviceName: minio
-  template: # [Must] Podのテンプレート
-    metadata: # [Must] デプロイするPodのメタデータ
+  template: # Podのテンプレート
+    metadata: # デプロイするPodのメタデータ
       labels:
-        app: minio # [Must] Podのラベル名
-    spec: # [Must] デプロイするPodの詳細な情報を記述する。
+        app: minio # Podのラベル名
+    spec: # デプロイするPodの詳細な情報を記述する。
       containers:
         - name: minio
           image: quay.io/minio/minio:latest
@@ -43,9 +43,9 @@ spec:
             - minio server /data --console-address :9090
           env:
             - name: MINIO_ROOT_USER # ROOTユーザー名
-              value: root
+              value: minioadmin
             - name: MINIO_ROOT_PASSWORD # ROOTパスワード
-              value: password
+              value: minioadmin
           resources:
             limits: # Podが利用可能な上限値
               memory: 512Mi
@@ -71,4 +71,4 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: 1Gi # MinIOに割り当てるストレージサイズ
