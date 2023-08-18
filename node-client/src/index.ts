@@ -1,11 +1,12 @@
 import * as S3 from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import * as fs from "fs";
 
 // 接続先設定
 const s3config: S3.S3ClientConfig = {
   credentials: {
-    accessKeyId: "root",
-    secretAccessKey: "password",
+    accessKeyId: "minioadmin",
+    secretAccessKey: "minioadmin",
   },
   endpoint: "http://localhost:9000",
   region: "ap-northeast-1",
@@ -132,6 +133,33 @@ const runListObjects = async (bucketName: string): Promise<string[]> => {
   return filelist;
 };
 
+// Presigned URLの取得
+const runGetPresignedURL = async (
+  bucketName: string,
+  key: string,
+  json: any
+): Promise<string | boolean> => {
+  try {
+    const putObjectParam: S3.PutObjectCommandInput = {
+      Bucket: bucketName,
+      Key: key,
+      Body: JSON.stringify(json),
+    };
+    const url = await getSignedUrl(
+      s3client,
+      new S3.PutObjectCommand(putObjectParam),
+      {
+        expiresIn: 3600,
+      }
+    );
+    console.log("Success", url);
+    return url;
+  } catch (err) {
+    console.log("Error", err);
+    return false;
+  }
+};
+
 // S3バケットのオブジェクト削除
 const runDeleteObject = async (
   bucketName: string,
@@ -198,6 +226,10 @@ const runAll = async () => {
   // S3バケットのオブジェクト一覧取得(1000件以上)
   console.log(">>> List objects");
   const filelist = await runListObjects(bucketName);
+
+  // PresignedURLの取得
+  console.log(">>> Get presigned URL");
+  await runGetPresignedURL(bucketName, filepath, json);
 
   // S3バケットのオブジェクト削除
   console.log(">>> Delete object");
